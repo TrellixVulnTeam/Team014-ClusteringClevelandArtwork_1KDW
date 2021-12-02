@@ -34,11 +34,9 @@ class App extends React.Component {
         text: d.text.toString()
       }
     }).then(dt => {
-      console.log(dt);
-
       var div = d3.select(this.refs.space).append('g');
 
-      var textbox = div.append('rect')
+      var textbox = d3.select(this.refs.space).append('rect')
         .attr('x', '0')
         .attr('y', '0')
         .attr('width', 90)
@@ -47,7 +45,7 @@ class App extends React.Component {
         .attr('stroke', '#e28743')
         .style("opacity", 0);
 
-      var text = div.append('text')
+      var text = d3.select(this.refs.space).append('text')
         .attr('dy', 35)
         .attr('dx', 10)
         .attr('padding', 10)
@@ -57,9 +55,6 @@ class App extends React.Component {
         .attr("font-family", "sans-serif")
         .attr("font-size", "20px")
         .style("opacity", 0);
-
-      div.selectAll('rect')
-      .attr("width", function(d) {return this.parentNode.getBBox().width + 10;})
 
       div.selectAll('circle')
           .data(dt)
@@ -76,7 +71,7 @@ class App extends React.Component {
             .attr('x', d.x + 10)
             .attr('y', d.y + 10)
             .transition()
-            .duration('50');
+            .duration('10');
 
             var text_width = text.node().getBBox().width + 20;
 
@@ -85,15 +80,14 @@ class App extends React.Component {
             .attr('x', d.x + 10)
             .attr('y', d.y + 10)
             .transition()
-            .duration('50');
+            .duration('10');
           })
           .on("mouseout", function(d){
             textbox.transition()
-              .attr("width", function(d) {return 0;})
-               .duration('50')
+               .duration('10')
                .style("opacity", 0);
             text.transition()
-               .duration('50')
+               .duration('10')
                .style("opacity", 0);
           });
     });
