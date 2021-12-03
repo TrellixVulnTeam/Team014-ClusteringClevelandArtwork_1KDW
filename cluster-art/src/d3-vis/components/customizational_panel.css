@@ -1,0 +1,18 @@
+#panel-container {
+    width: 24rem;
+    position: absolute;
+    right: 32px;
+    top: 32px;
+}
+
+.card .card-title {
+    margin-bottom: 32px !important;
+}
+
+.card .card-subtitle {
+    margin: 10px 0 10px !important;
+}
+
+.form-control {
+    margin-bottom: 24px !important;
+}

@@ -2,8 +2,8 @@ import './App.css';
 import * as d3 from 'd3'
 import React, { Component } from 'react'
 import Graph from "./Graph.js"
+import KMeans from "./d3-vis/kmeans";
 
-import data from './data.csv';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,7 +12,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <Graph />
+    	<div>
+	    	<Graph />
+    	</div>
     );
   }
 };

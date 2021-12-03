@@ -2,6 +2,7 @@ import * as d3 from 'd3'
 import React, { Component } from 'react'
 
 import data from './data.csv';
+import './Graph.css'
 
 class Graph extends React.Component {
   constructor(props) {
@@ -13,11 +14,14 @@ class Graph extends React.Component {
   }
 
   drawChart() {
+    const div = d3.select(this.refs.overall)
+                  .classed("svg-container", true);
+
     const svg = d3.select(this.refs.space)
-                .attr('width', 900)
-                .attr('height', 700)
-                .style('padding', '10px')
+                //.attr("preserveAspectRatio", "xMinYMin meet")
+                .attr("viewBox", "0 0 1200 800")
                 .style('background', '#223344')
+                .classed("svg-content-responsive", true)
                 .style('cursor', 'pointer')
                 .style('-webkit-user-select', 'none')
                 .style('-khtml-user-select', 'none')
@@ -27,6 +31,7 @@ class Graph extends React.Component {
 
   render() {
     var d = d3.csv(data, function(d) {
+      console.log(d)
       return {
         x: +d.x,
         y: +d.y,
@@ -65,6 +70,7 @@ class Graph extends React.Component {
           .attr('fill', function() { return 'teal'; })
           .attr('r', 5)
           .on("mouseover", function(d){
+            console.log("mouse over")
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
             .attr('x', d.x + 10)
@@ -82,6 +88,7 @@ class Graph extends React.Component {
             .duration('10');
           })
           .on("mouseout", function(d){
+            console.log("mouse out")
             textbox.transition()
                .duration('10')
                .style("opacity", 0);
@@ -92,7 +99,7 @@ class Graph extends React.Component {
     });
 
     return (
-      <div>
+      <div ref='overall'>
         <svg ref='space'>
         </svg>
       </div>
