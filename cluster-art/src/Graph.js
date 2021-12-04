@@ -8,8 +8,8 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      svg_width: 900,
-      svg_height: 700,
+      svg_width: 1200,
+      svg_height: 1000,
       graph_width: 600,
       graph_height: 400,
       num_clusters: 3,
@@ -99,8 +99,8 @@ class Graph extends React.Component {
           .on("mouseover", function(d){
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
-            .attr('x', d.x  + 10)
-            .attr('y', d.y + 10)
+            .attr('x', d.x - 130)
+            .attr('y', d.y + 40)
             .transition()
             .duration('10');
 
@@ -108,18 +108,22 @@ class Graph extends React.Component {
 
             textbox.style("opacity", 1)
             .attr("width", function(d) {return text_width;})
-            .attr('x', d.x + 10)
-            .attr('y', d.y + 10)
+            .attr('height', 70)
+            .attr('x', d.x - 130)
+            .attr('y', d.y + 40)
             .transition()
             .duration('10');
           })
           .on("mouseout", function(d){
             textbox.transition()
                .duration('10')
-               .style("opacity", 0);
+               .style("opacity", 0)
+               .attr('width', 0)
+               .attr('height', 0);
             text.transition()
                .duration('10')
-               .style("opacity", 0);
+               .style("opacity", 0)
+               .text(d['target'].__data__.text);
           });
       });
     
