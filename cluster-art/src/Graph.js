@@ -29,7 +29,7 @@ class Graph extends React.Component {
                 .attr('width', this.state.svg_width)
                 .attr('height', this.state.svg_height)
                 .style('padding', '10px')
-                .style('background', '#223344')
+                //.style('background', '#223344')
                 .style('cursor', 'pointer')
                 .style('-webkit-user-select', 'none')
                 .style('-khtml-user-select', 'none')
@@ -97,10 +97,11 @@ class Graph extends React.Component {
           .attr("transform", "translate(" + trans_width + "," + trans_height +")")
           .attr('r', 5)
           .on("mouseover", function(d){
+            console.log(this)
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
-            .attr('x', d.x - 130)
-            .attr('y', d.y + 40)
+            .attr('x', this.__data__.x + 295)
+            .attr('y', this.__data__.y + 295)
             .transition()
             .duration('10');
 
@@ -109,8 +110,8 @@ class Graph extends React.Component {
             textbox.style("opacity", 1)
             .attr("width", function(d) {return text_width;})
             .attr('height', 70)
-            .attr('x', d.x - 130)
-            .attr('y', d.y + 40)
+            .attr('x', this.__data__.x + 295)
+            .attr('y', this.__data__.y + 295)
             .transition()
             .duration('10');
           })

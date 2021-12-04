@@ -12,7 +12,11 @@ class App extends React.Component {
 
   render() {
     return (
-    	<div>
+    	<div
+    	 style={{
+	        backgroundColor: '#223344',
+	      }}
+	    >
 	    	<Graph />
     	</div>
     );
