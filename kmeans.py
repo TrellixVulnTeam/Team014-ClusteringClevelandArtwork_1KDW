@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, scale, normalize
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 import spacy
@@ -46,9 +46,15 @@ class ArtKMeans:
 
         #reduce features to become 2D plottable
         cols = [x for x in self.X.columns if x != 'id']
+        
+        #need to scale before conducting PCA
+        self.X[cols] = scale(self.X[cols])
         pca = PCA(n_components=2).fit_transform(self.X[cols])
         self.X['x'] = pca[:, 0]
         self.X['y'] = pca[:, 1]
+        
+        #normalize result to be easier to plot
+        self.X[['x', 'y']] = normalize(self.X[['x', 'y']], axis=0)
         self.X = self.X.drop(cols, axis=1)
 
         return self
