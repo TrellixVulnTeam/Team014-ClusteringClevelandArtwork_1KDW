@@ -2,42 +2,68 @@ import * as d3 from 'd3'
 import React, { Component } from 'react'
 
 import data from './data.csv';
-import './Graph.css'
+//import './Graph.css'
 
 class Graph extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      svg_width: 900,
+      svg_height: 700,
+      graph_width: 600,
+      graph_height: 400,
+      num_clusters: 3,
+    }
+
+    this.drawChart = this.drawChart.bind(this);
+    this.drawNodes = this.drawNodes.bind(this);
   }
 
   componentDidMount() {
     this.drawChart();
+    this.drawNodes();
   }
 
   drawChart() {
-    const div = d3.select(this.refs.overall)
-                  .classed("svg-container", true);
-
     const svg = d3.select(this.refs.space)
-                //.attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "0 0 1200 800")
+                .attr('width', this.state.svg_width)
+                .attr('height', this.state.svg_height)
+                .style('padding', '10px')
                 .style('background', '#223344')
-                .classed("svg-content-responsive", true)
                 .style('cursor', 'pointer')
                 .style('-webkit-user-select', 'none')
                 .style('-khtml-user-select', 'none')
                 .style('-moz-user-select', 'none')
                 .style('-ms-user-select', 'none')
+                .style("margin", "auto")
+                .style("display", "block");
+
+    var trans_width = (this.state.svg_width - this.state.graph_width - 30)/2;
+    var trans_height = (this.state.svg_height - this.state.graph_height - 30)/2;
+
+    console.log(trans_width);
+
+    const rect = svg.append("rect")
+                    .attr('width', this.state.graph_width + 30)
+                    .attr('height', this.state.graph_height + 30)
+                    .attr("fill", "gold")
+                    .style('padding', '10px')
+                    .attr("transform", "translate(" + trans_width + "," + trans_height +")");
   }
 
-  render() {
+  drawNodes() {
+    var self = this;
     var d = d3.csv(data, function(d) {
-      console.log(d)
       return {
-        x: +d.x,
-        y: +d.y,
-        text: d.text.toString()
+        x: +d.x * self.state.graph_width,
+        y: +d.y * self.state.graph_height,
+        text: d.text.toString(),
+        cluster_id: +d.clusterid
       }
     }).then(dt => {
+      console.log(dt)
+      var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2;
+      var trans_height = (self.state.svg_height - self.state.graph_height - 30)/2;
       var div = d3.select(this.refs.space).append('g');
 
       var textbox = d3.select(this.refs.space).append('rect')
@@ -68,12 +94,12 @@ class Graph extends React.Component {
           .attr('cx', function(d) { return d.x; })
           .attr('cy', function(d) { return d.y; })
           .attr('fill', function() { return 'teal'; })
+          .attr("transform", "translate(" + trans_width + "," + trans_height +")")
           .attr('r', 5)
           .on("mouseover", function(d){
-            console.log("mouse over")
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
-            .attr('x', d.x + 10)
+            .attr('x', d.x  + 10)
             .attr('y', d.y + 10)
             .transition()
             .duration('10');
@@ -88,7 +114,6 @@ class Graph extends React.Component {
             .duration('10');
           })
           .on("mouseout", function(d){
-            console.log("mouse out")
             textbox.transition()
                .duration('10')
                .style("opacity", 0);
@@ -96,7 +121,11 @@ class Graph extends React.Component {
                .duration('10')
                .style("opacity", 0);
           });
-    });
+      });
+    
+  }
+
+  render() {
 
     return (
       <div ref='overall'>

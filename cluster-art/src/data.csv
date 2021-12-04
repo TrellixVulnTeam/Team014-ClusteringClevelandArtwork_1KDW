@@ -1,5 +1,5 @@
-x,y,text
-200,200,testing
-30,30,tesssssssssssssssssssssssssting
-100,50,hellohellohello
-300,500,this is a picture
+x,y,text,clusterid
+0.666666667,0.4,testing,1
+0.1,0.06,tesssssssssssssssssssssssssting,1
+0.333333333,0.1,hellohellohello,2
+1,1,this is a picture,3
