@@ -16,8 +16,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "activate": ".\\api\\venv\\Scripts\\activate.bat && python api\\api.py",
-    "start": "concurrently \"npm run activate\" \"react-scripts start\"",
+    "start": "react-scripts --openssl-legacy-provider start",
     "start-api": "cd api && venv/bin/flask run --no-debugger",
     "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
