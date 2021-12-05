@@ -4,19 +4,17 @@ import {Accordion, Form, FormGroup} from "react-bootstrap";
 
 export default function AttributeDropdown(props) {
 
-    const [customAttributes, setCustomAttributes] = useState(
-        ["creation date", "culture", "collection", "type", "technique"]
-    );
+    const allAttrs = ["Title", "Creation Date", "Culture", "Collection", "Type", "Technique"]
+    const [customAttributes, setCustomAttributes] = useState(new Set(
+        allAttrs
+    ));
 
     const handleChange = (attr) => {
-        if (customAttributes.includes(attr)) {
-            let copy = customAttributes;
-            copy.splice(copy.indexOf(attr), 1);
-            setCustomAttributes(copy);
+        let attr_copy = customAttributes;
+        if (attr_copy.delete(attr)) {
+            setCustomAttributes(attr_copy);
         } else {
-            let copy = customAttributes;
-            copy.push(attr);
-            setCustomAttributes(copy);
+            setCustomAttributes(attr_copy.add(attr));
         }
         props.attributeHandler(customAttributes);
     }
@@ -27,31 +25,14 @@ export default function AttributeDropdown(props) {
                 <Accordion.Header> Clustering Attributes </Accordion.Header>
                 <Accordion.Body>
                     <FormGroup>
-                        <Form.Check
-                            label={"Creation Date"}
-                            defaultChecked={customAttributes.includes("creation date")}
-                            onChange={() => handleChange("creation date")}
-                        />
-                        <Form.Check
-                            label={"Culture"}
-                            defaultChecked={customAttributes.includes("culture")}
-                            onChange={() => handleChange("culture")}
-                        />
-                        <Form.Check
-                            label={"Collection"}
-                            defaultChecked={customAttributes.includes("collection")}
-                            onChange={() => handleChange("collection")}
-                        />
-                        <Form.Check
-                            label={"Type"}
-                            defaultChecked={customAttributes.includes("type")}
-                            onChange={() => handleChange("type")}
-                        />
-                        <Form.Check
-                            label={"Technique"}
-                            defaultChecked={customAttributes.includes("technique")}
-                            onChange={() => handleChange("technique")}
-                        />
+
+                        {allAttrs.map(attr => <Form.Check
+                            key={attr}
+                            label={attr}
+                            defaultChecked={customAttributes.has(attr)}
+                            onChange={() => handleChange(attr)}
+                        />)}
+
                     </FormGroup>
                 </Accordion.Body>
             </Accordion.Item>
