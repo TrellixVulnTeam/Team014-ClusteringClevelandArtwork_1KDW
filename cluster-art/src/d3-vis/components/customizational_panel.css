@@ -1,8 +1,10 @@
 #panel-container {
     width: 24rem;
     position: absolute;
-    right: 32px;
-    top: 32px;
+    padding-bottom: 100%;
+    right: 10px;
+    top: 396px;
+    width: 25%;
 }
 
 .card .card-subtitle {
