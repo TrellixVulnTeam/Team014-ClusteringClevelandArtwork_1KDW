@@ -39,10 +39,9 @@ class App extends React.Component {
 				  number of artworks!)</li>
 				  <li>Select what attributes you want to cluster (2 or more)</li>
 				</ul> 
+				<h4>Kmeans Cluster Graph</h4>
 			</body>
 	    	<KMeans />
-
-	    	<h4>Kmeans Cluster Graph</h4>
 	    	<Graph />
     	</div>
     );
