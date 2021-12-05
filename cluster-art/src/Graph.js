@@ -27,9 +27,11 @@ class Graph extends React.Component {
   }
 
   drawChart() {
+    //making svg responsive
     d3.select(this.refs.overall).classed("svg-container", true)
     .attr("transform", "translate(" + 200 + "," + 300 +")");
 
+    //drawing int svg
     const svg = d3.select(this.refs.space)
                 .style('padding-left', '10px')
                 .style('padding-right', '10px')
@@ -49,8 +51,7 @@ class Graph extends React.Component {
     var trans_width = (this.state.svg_width - this.state.graph_width - 30)/2;
     var trans_height = (this.state.svg_height - this.state.graph_height - 30)/2;
 
-    console.log(trans_width);
-
+    //this is the actual graph
     const rect = svg.append("rect")
                     .attr('width', this.state.graph_width + 30)
                     .attr('height', this.state.graph_height + 30)
@@ -80,9 +81,11 @@ class Graph extends React.Component {
 
       var myColor = d3.scaleSequential().domain([1, self.state.num_clusters]).range(d3.schemeSet1);
 
+      //For circles
       var div = d3.select(this.refs.space).append('g')
       .attr("transform", "translate(" + 250 + "," + 200 +")");
 
+      //Hover textbox. Append to here to add something into textbox
       var divHover = d3.select(this.refs.space).append('g');
 
       var textbox = divHover.append('rect')
@@ -107,6 +110,7 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
+      //Click textbox. Append here to add something into the clicked textbox
       var div2 = d3.select(this.refs.space).append("g")
 
       var boxClick = div2.append('rect')
@@ -130,6 +134,7 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
+      //When you click on the x mark it should close out the click box
       var close = div2.append('path')
         .attr('d', d3.symbol().type(d3.symbolCross).size(60))
         .attr('stroke', 'gray')
@@ -139,6 +144,7 @@ class Graph extends React.Component {
           div2.attr("opacity", "0")
         });
 
+      //Draw circles
       div.selectAll('circle')
           .data(dt)
           .enter()
@@ -149,16 +155,22 @@ class Graph extends React.Component {
           .attr('fill', function(d){return myColor(d.cluster_id)})
           .attr('r', 5)
           .on("mouseover", function(d){
+            //moving hover textbox
             divHover.attr("transform", "translate(" + (this.__data__.x + 250 + 10) 
               + "," + (this.__data__.y + 200 + 10) +")")
             .attr("opacity", 1);
+
+            //Adding text
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
             .transition()
             .duration('10');
 
+
+            //Dynamic text width
             var text_width = text.node().getBBox().width + 20;
 
+            //Hover textbox formatting
             textbox.style("opacity", 1)
             .attr("width", function(d) {return text_width;})
             .attr('height', 70)
@@ -166,6 +178,7 @@ class Graph extends React.Component {
             .duration('10');
           })
           .on("mouseout", function(d) {
+            //Make everything in hover have an opacity of 0
             divHover.attr("opacity", 0);
 
             textbox.transition()
@@ -178,18 +191,22 @@ class Graph extends React.Component {
                .text(d['target'].__data__.text);
           })
           .on("click", function(d) {
+            //Moving click textbox
             div2.attr("transform", "translate(" + (250 + self.state.graph_width + 45) 
               + "," + 210 +")")
             .attr("opacity", 1);
 
+            //statis vs dynamic textbox width
             var close_width = 400;
             var text_width = text.node().getBBox().width + 20;
 
+            //make everything have an opacity of 1
             boxText.style("opacity", 1)
             .text(d['target'].__data__.text)
             .transition()
             .duration('10');
 
+            //The box for clicking a node
             boxClick.style("opacity", 1)
             .attr("width", function(d) {return close_width + 25;})
             .attr('height', 70)
