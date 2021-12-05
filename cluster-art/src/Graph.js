@@ -3,16 +3,17 @@ import React, { Component } from 'react'
 
 import data from './data.csv';
 import {symbol, symbolCross} from "d3-shape";
-//import './Graph.css'
+import './Graph.css'
+import KMeans from "./d3-vis/kmeans";
 
 class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      svg_width: 1400,
-      svg_height: 1000,
-      graph_width: 600,
-      graph_height: 400,
+      svg_width: 1600,
+      svg_height: 800,
+      graph_width: 1100,
+      graph_height: 700,
       num_clusters: 3,
     }
 
@@ -26,18 +27,24 @@ class Graph extends React.Component {
   }
 
   drawChart() {
+    d3.select(this.refs.overall).classed("svg-container", true)
+    .attr("transform", "translate(" + 200 + "," + 300 +")");
+
     const svg = d3.select(this.refs.space)
-                .attr('width', this.state.svg_width)
-                .attr('height', this.state.svg_height)
-                .style('padding', '10px')
-                .style('background', 'pink')
+                .style('padding-left', '10px')
+                .style('padding-right', '10px')
+                //.style('background', 'pink')
+                .style('background', '#ebdfbc')
                 .style('cursor', 'pointer')
                 .style('-webkit-user-select', 'none')
                 .style('-khtml-user-select', 'none')
                 .style('-moz-user-select', 'none')
                 .style('-ms-user-select', 'none')
                 .style("margin", "auto")
-                .style("display", "block");
+                .style("display", "block")
+                .attr("preserveAspectRatio", "xMinYMin meet")
+                .attr("viewBox", "250 200 " + this.state.svg_width + " " + this.state.svg_height)
+                .classed("svg-content-responsive", true);
 
     var trans_width = (this.state.svg_width - this.state.graph_width - 30)/2;
     var trans_height = (this.state.svg_height - this.state.graph_height - 30)/2;
@@ -47,9 +54,12 @@ class Graph extends React.Component {
     const rect = svg.append("rect")
                     .attr('width', this.state.graph_width + 30)
                     .attr('height', this.state.graph_height + 30)
-                    .attr("fill", "white")
-                    .style('padding', '10px')
-                    .attr("transform", "translate(" + trans_width + "," + trans_height +")");
+                    .attr("fill", "#f7f2e1")
+                    .attr("stroke", "#d99e16")
+                    .attr("stroke-width", "10px")
+                    .attr("rx", 6)
+                    .attr("ry", 6)
+                    .attr("transform", "translate(" + 250 + "," + 200 +")");
   }
 
   drawNodes() {
@@ -63,14 +73,15 @@ class Graph extends React.Component {
       }
     }).then(dt => {
       console.log(dt)
-      var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2;
-      var trans_height = (self.state.svg_height - self.state.graph_height - 30)/2;
+      var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2 - 250;
+      var trans_height = (self.state.svg_height - self.state.graph_height - 30)/ - 200;
 
       console.log(trans_width)
 
       var myColor = d3.scaleSequential().domain([1, self.state.num_clusters]).range(d3.schemeSet1);
 
-      var div = d3.select(this.refs.space).append('g');
+      var div = d3.select(this.refs.space).append('g')
+      .attr("transform", "translate(" + 250 + "," + 200 +")");
 
       var divHover = d3.select(this.refs.space).append('g');
 
@@ -79,8 +90,10 @@ class Graph extends React.Component {
         .attr('y', '0')
         .attr('width', 90)
         .attr('height', 70)
-        .attr('fill', '#e28743')
-        .attr('stroke', '#e28743')
+        .attr('fill', 'white')
+        .attr('stroke', 'white')
+        .attr("rx", 6)
+        .attr("ry", 6)
         .style("opacity", 0);
 
       var text = divHover.append('text')
@@ -89,7 +102,7 @@ class Graph extends React.Component {
         .attr('padding', 10)
         .attr("dominant-baseline", "middle")
         .attr("text-anchor", "start")
-        .attr("fill", "pink")
+        .attr("fill", "#73716b")
         .attr("font-family", "sans-serif")
         .attr("font-size", "20px")
         .style("opacity", 0);
@@ -99,9 +112,11 @@ class Graph extends React.Component {
       var boxClick = div2.append('rect')
         .attr('x', '0')
         .attr('y', '0')
+        .attr("rx", 6)
+        .attr("ry", 6)
         .attr('width', 100)
         .attr('height', 100)
-        .attr('fill', '#e28743')
+        .attr('fill', 'white')
         .style("opacity", 0);
 
       var boxText = div2.append('text')
@@ -110,7 +125,7 @@ class Graph extends React.Component {
         .attr('padding', 10)
         .attr("dominant-baseline", "middle")
         .attr("text-anchor", "start")
-        .attr("fill", "pink")
+        .attr("fill", "#73716b")
         .attr("font-family", "sans-serif")
         .attr("font-size", "20px")
         .style("opacity", 0);
@@ -119,6 +134,7 @@ class Graph extends React.Component {
         .attr('d', d3.symbol().type(d3.symbolCross).size(60))
         .attr('stroke', 'gray')
         .attr('fill', 'gray')
+        .style("opacity", 0)
         .on("click", function() {
           div2.attr("opacity", "0")
         });
@@ -131,11 +147,10 @@ class Graph extends React.Component {
           .attr('cx', function(d) { return d.x; })
           .attr('cy', function(d) { return d.y; })
           .attr('fill', function(d){return myColor(d.cluster_id)})
-          .attr("transform", "translate(" + trans_width + "," + trans_height +")")
           .attr('r', 5)
           .on("mouseover", function(d){
-            divHover.attr("transform", "translate(" + (this.__data__.x + trans_width + 10) 
-              + "," + (this.__data__.y + trans_height + 10) +")")
+            divHover.attr("transform", "translate(" + (this.__data__.x + 250 + 10) 
+              + "," + (this.__data__.y + 200 + 10) +")")
             .attr("opacity", 1);
             text.style("opacity", 1)
             .text(d['target'].__data__.text)
@@ -163,11 +178,11 @@ class Graph extends React.Component {
                .text(d['target'].__data__.text);
           })
           .on("click", function(d) {
-            div2.attr("transform", "translate(" + (self.state.svg_width - trans_width + 10) 
-              + "," + (trans_height) +")")
+            div2.attr("transform", "translate(" + (250 + self.state.graph_width + 45) 
+              + "," + 210 +")")
             .attr("opacity", 1);
 
-            var close_width = text.node().getBBox().width + 10;
+            var close_width = 400;
             var text_width = text.node().getBBox().width + 20;
 
             boxText.style("opacity", 1)
@@ -176,12 +191,13 @@ class Graph extends React.Component {
             .duration('10');
 
             boxClick.style("opacity", 1)
-            .attr("width", function(d) {return text_width;})
+            .attr("width", function(d) {return close_width + 25;})
             .attr('height', 70)
             .transition()
             .duration('10');
 
-            close.attr("transform", "translate(" + close_width + ", 10) rotate(45)");
+            close.attr("transform", "translate(" + (close_width + 15) + ", 10) rotate(45)")
+            .style("opacity", 1);
           })
       });
     
@@ -191,7 +207,6 @@ class Graph extends React.Component {
 
     return (
       <div ref='overall'>
-        <body style={{"background-color": "red"}} />
         <svg ref='space'>
         </svg>
       </div>
