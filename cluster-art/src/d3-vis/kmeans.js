@@ -1,27 +1,39 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import CustomizationPanel from "./components/customization_panel";
 import './kmeans.css';
+import {Modal} from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 
 export default function KMeans() {
 
-    const [numArtworks, setNumArtworks] = useState(100);
-    const [kVal, setkVal] = useState(5);
-    const [customFeatures, setCustomFeatures] = useState(
-        ["creation date", "culture", "collection", "type", "technique"]
-    );
-
-    console.log(numArtworks);
-    console.log(kVal);
-    console.log(customFeatures);
+    const [status, setStatus] = useState(0);
+    const errorMessages = [
+        "",
+        "Please enter a valid number of art works (2-30000).",
+        "Please enter a valid number of clusters (2-30).",
+        "Please choose at least 2 attributes for clustering."
+    ]
 
     return (
         <div>
             <CustomizationPanel
                 id={"panel-wrapper"}
-                numArtHandler={setNumArtworks}
-                kHandler={setkVal}
-                attributesHandler={setCustomFeatures}
+                statusHandler={setStatus}
             />
+
+            <Modal show={status !== 0} onHide={() => setStatus(0)}>
+                <Modal.Header closeButton={true}>
+                    <Modal.Title> Invalid input. </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {errorMessages[status]}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={() => setStatus(0)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     )
 
