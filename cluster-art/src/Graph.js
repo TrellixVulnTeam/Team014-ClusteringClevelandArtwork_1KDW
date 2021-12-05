@@ -77,8 +77,6 @@ class Graph extends React.Component {
       var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2 - 250;
       var trans_height = (self.state.svg_height - self.state.graph_height - 30)/ - 200;
 
-      console.log(trans_width)
-
       var myColor = d3.scaleSequential().domain([1, self.state.num_clusters]).range(d3.schemeSet1);
 
       //For circles
@@ -166,7 +164,6 @@ class Graph extends React.Component {
             .transition()
             .duration('10');
 
-
             //Dynamic text width
             var text_width = text.node().getBBox().width + 20;
 
@@ -212,6 +209,9 @@ class Graph extends React.Component {
             .attr('height', 70)
             .transition()
             .duration('10');
+
+            //Todo: add more information based on what's being passed in from backend
+            //Appending artists name, maybe picture? general info about the art piece
 
             close.attr("transform", "translate(" + (close_width + 15) + ", 10) rotate(45)")
             .style("opacity", 1);
