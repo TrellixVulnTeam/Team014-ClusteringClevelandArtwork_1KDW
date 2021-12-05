@@ -1,0 +1,14 @@
+#panel-container {
+    width: 24rem;
+    position: absolute;
+    right: 32px;
+    top: 32px;
+}
+
+.card .card-subtitle {
+    margin: 0 0 8px !important;
+}
+
+.form-control {
+    margin: 0 0 24px !important;
+}
