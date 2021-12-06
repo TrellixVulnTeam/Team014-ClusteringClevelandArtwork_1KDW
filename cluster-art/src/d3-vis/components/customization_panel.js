@@ -42,17 +42,7 @@ export default function CustomizationPanel(props) {
     const submitParams = () => {
         let validInput = validateParams();
         if (validInput) {
-            // console.log(numArtworks)
-            // console.log(kValue)
-            // console.log(customFeatures)
-            // let res = fetch('/time', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
-            // })
-            // console.log(res)
+            props.loadingHandler(true);
             fetch('/time', {
                 method: 'POST',
                 headers: {
@@ -63,9 +53,9 @@ export default function CustomizationPanel(props) {
                 .then(data => {
                     props.jsonHandler(data)
                     props.clusterHandler(kValue)
+                    props.loadingHandler(false);
                 })
         }
-
     }
 
     return (
