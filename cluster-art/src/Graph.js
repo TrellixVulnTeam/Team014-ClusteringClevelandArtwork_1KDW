@@ -211,6 +211,13 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
+      var boxImage = div2.append("svg:a")
+        .append("svg:image")
+        .style("opacity", 0)
+        .attr('dy', 160)
+        .attr('dx', 10)
+        .attr('padding', 10);
+
       //When you click on the x mark it should close out the click box
       var close = div2.append('path')
         .attr('d', d3.symbol().type(d3.symbolCross).size(60))
@@ -221,6 +228,7 @@ class Graph extends React.Component {
           div2.attr("opacity", "0");
           div2.selectAll("text").text("");
           boxClick.attr("width", 0).attr("height", 0);
+          boxImage.attr("width", 0).attr("height", 0);
         });
 
       div.selectAll('circle')
@@ -306,11 +314,22 @@ class Graph extends React.Component {
             var text_width = d3.max([boxText.node().getBBox().width, boxTimePeriod.node().getBBox().width
               , boxCulture.node().getBBox().width, boxTypeTechnique.node().getBBox().width, boxFunFact.node().getBBox().width]) + 20;
 
-            console.log(text_width)
+            var temp = jsonData[d['target'].__data__.text]["image_url"].split("_")
+            temp.pop()
             //The box for clicking a node
+
+            boxImage.style("opacity", 1)
+            .attr('width', 200)
+            .attr('height', 250)
+            .attr("transform", "translate(" + 50
+              + "," + 135 +")")
+            .attr("xlink:href", temp+"_web.jpg")
+            .transition()
+            .duration('10');
+
             boxClick.style("opacity", 1)
             .attr("width", function(d) {return text_width + 25;})
-            .attr('height', 130)
+            .attr('height', boxImage.node().getBBox().height + 140)
             .transition()
             .duration('10');
 
@@ -321,44 +340,6 @@ class Graph extends React.Component {
             close.attr("transform", "translate(" + (text_width + 15) + ", 10) rotate(45)")
             .style("opacity", 1);
           })
-        // var divLegend = d3.select(this.refs.space).append("g");
-        //
-        // divLegend.append('rect')
-        //   .attr('x', 19)
-        //   .attr('y', '8')
-        //   .attr("rx", 6)
-        //   .attr("ry", 6)
-        //   .attr('width', maxcluster * 30 + 40)
-        //   .attr('height', 50)
-        //   .attr('fill', 'white')
-        //   .attr("stroke", "grey")
-        //   .attr("stroke-width", 1);
-        //
-        //
-        // divLegend.selectAll("circle")
-        //     .data(d3.range(maxcluster+1))
-        //     .enter()
-        //     .append('circle')
-        //     .attr('cx', function(d) { return  d * 30+ 40; })
-        //     .attr('cy', function(d) { return 34; })
-        //     .attr('fill', function(d){return myColor(d)})
-        //     .attr('r', self.state.window_width * 0.002)
-        //
-        // divLegend.selectAll("text").data(d3.range(maxcluster+1))
-        //     .enter()
-        //     .append('text')
-        //     .attr('x', function(d) { return  d * 30 + 40; })
-        //     .style("text-anchor", "middle")
-        //     .attr('y', function(d) { return 50})
-        //     .text(function(d) { console.log(d.toString()); return d.toString(); })
-        //
-        // divLegend.append("text")
-        //   .attr('dy', 20)
-        //   .attr('dx', 25)
-        //   .text("Node Color to Cluster Number")
-        //   .attr("text-anchor", "start")
-        //   .attr("font-family", "sans-serif")
-        //   .attr("font-size", "12px");
 
       });
     
