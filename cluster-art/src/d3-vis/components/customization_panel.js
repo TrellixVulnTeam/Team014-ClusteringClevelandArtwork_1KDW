@@ -42,18 +42,27 @@ export default function CustomizationPanel(props) {
     const submitParams = () => {
         let validInput = validateParams();
         if (validInput) {
-            console.log(numArtworks)
-            console.log(kValue)
-            console.log(customFeatures)
+            // console.log(numArtworks)
+            // console.log(kValue)
+            // console.log(customFeatures)
+            // let res = fetch('/time', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
+            // })
+            // console.log(res)
+            fetch('/time', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': "application/json"
+                },
+                body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
+            }).then(res => res.json())
+                .then(data => props.jsonHandler(data))
         }
-        // todo POST request
-        fetch('/time', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
-        })
+
     }
 
     return (

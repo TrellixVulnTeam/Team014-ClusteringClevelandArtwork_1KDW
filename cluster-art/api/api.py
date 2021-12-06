@@ -22,10 +22,13 @@ def get_current_time():
 
     df_artworks = pd.read_pickle("df_artworks.pkl")
     df_artworks = df_artworks.sample(n=num_artwork)
+
+    print(df_artworks.head())
+#     print(type(df_artworks))
     
     model = ArtKMeans()
 
-    print(match_feature_names(cluster_attr))
+#     print(match_feature_names(cluster_attr))
 
     model.fit(df_artworks, match_feature_names(cluster_attr))
 
@@ -39,6 +42,11 @@ def get_current_time():
 
     results.to_csv(src_directory + '\\data.csv', index=False)
 
-    print(results)
+#     print(results)
 
-    return {'time': time.time()}
+#     return {'time': time.time()}
+
+#     df_dict = {row[1]: row[2:] for row in df_artworks.iterrows()}
+#     print(df_dict)
+    df_artworks = df_artworks.set_index('id')
+    return df_artworks.to_json(orient="index")
