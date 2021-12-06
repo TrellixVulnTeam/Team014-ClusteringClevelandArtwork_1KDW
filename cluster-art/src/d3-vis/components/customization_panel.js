@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import FormControl from "react-bootstrap/FormControl";
 import AttributeDropdown from "./attribute_dropdown";
-import {FormGroup} from "react-bootstrap";
+import {AccordionContext, FormGroup} from "react-bootstrap";
 import {Accordion} from "react-bootstrap";
 
 import './customizational_panel.css';
@@ -16,6 +16,7 @@ export default function CustomizationPanel(props) {
     const [customFeatures, setCustomFeatures] = useState(new Set(
         ["Title", "Creation Date", "Culture", "Collection", "Type", "Technique"]
     ));
+    const [collapsed, setCollapsed] = useState(false);
 
     const validateParams = () => {
         if (numArtworks < 1 || numArtworks > 30000) {
@@ -49,8 +50,8 @@ export default function CustomizationPanel(props) {
     }
 
     return (
-        <Accordion id={"panel-container"} defaultActiveKey={0}>
-            <Accordion.Item eventKey={0}>
+        <Accordion id={"panel-container"} defaultActiveKey={0} flush className={collapsed ? "condensed" : "expanded"}>
+            <Accordion.Item eventKey={0} onClick={() => setCollapsed(!collapsed)}>
                 <Card>
                     <Accordion.Header> Customize Parameters </Accordion.Header>
                     <Accordion.Body>
