@@ -252,8 +252,8 @@ class Graph extends React.Component {
           })
           .on("click", function(d) {
             //Moving click textbox
-            div2.attr("transform", "translate(" + (xScale(d.x) + 5)
-              + "," + (yScale(d.y) + 5) +")")
+            div2.attr("transform", "translate(" + (d.x + 5)
+              + "," + (d.y + 5) +")")
             .attr("opacity", 1);
 
             //statis vs dynamic textbox width
