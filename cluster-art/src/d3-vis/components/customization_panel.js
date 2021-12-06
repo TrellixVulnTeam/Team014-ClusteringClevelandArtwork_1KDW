@@ -23,7 +23,7 @@ export default function CustomizationPanel(props) {
             props.statusHandler(1);
             return false;
         }
-        if (kValue < 2 || kValue > 30) {
+        if (kValue < 2 || kValue > 25) {
             props.statusHandler(2);
             return false;
         }
@@ -60,7 +60,10 @@ export default function CustomizationPanel(props) {
                 },
                 body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
             }).then(res => res.json())
-                .then(data => props.jsonHandler(data))
+                .then(data => {
+                    props.jsonHandler(data)
+                    props.clusterHandler(kValue)
+                })
         }
 
     }
@@ -95,7 +98,7 @@ export default function CustomizationPanel(props) {
                                             setkValue(e.target.valueAsNumber)}
                                         defaultValue={kValue}
                                         min={2}
-                                        max={30}
+                                        max={25}
                                     />
                                     <AttributeDropdown attributeHandler={setCustomFeatures}/>
                                     <Button style={{float: "right", "marginBottom": "24px"}} type={"button"}
