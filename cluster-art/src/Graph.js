@@ -176,6 +176,8 @@ class Graph extends React.Component {
 
       function zoomed({transform}) {
         div.attr("transform", transform)
+        div2.attr("transform", transform)
+        divHover.attr("transform", transform)
       }
 
       //Hover textbox. Append to here to add something into textbox
@@ -249,9 +251,10 @@ class Graph extends React.Component {
           .attr('r', self.state.window_width * 0.002)
           .on("mouseover", function(d){
             //moving hover textbox
+            console.log(d.x)
             divHover
-                .attr("transform", "translate(" + (this.__data__.x + 10)
-              + "," + (this.__data__.y + 10) +")")
+                .attr("transform", "translate(" + (d.x + 10)
+              + "," + (d.y + 10) +")")
             .attr("opacity", 1);
 
             //Adding text
