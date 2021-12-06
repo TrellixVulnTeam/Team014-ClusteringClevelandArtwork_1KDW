@@ -96,7 +96,7 @@ class Graph extends React.Component {
 
       var maxcluster = d3.max(dt, function(d) {return d.cluster_id})
 
-      var myColor = d3.scaleSequential().domain([1, maxcluster]).interpolator(d3.interpolateTurbo);
+      var myColor = d3.scaleSequential().domain([0, maxcluster]).interpolator(d3.interpolateTurbo);
 
       //For circles
       var div = d3.select(this.refs.space).append('g')
@@ -287,6 +287,45 @@ class Graph extends React.Component {
             close.attr("transform", "translate(" + (close_width + 15) + ", 10) rotate(45)")
             .style("opacity", 1);
           })
+        var divLegend = d3.select(this.refs.space).append("g");
+        
+        divLegend.append('rect')
+          .attr('x', 19)
+          .attr('y', '8')
+          .attr("rx", 6)
+          .attr("ry", 6)
+          .attr('width', maxcluster * 30 + 40)
+          .attr('height', 50)
+          .attr('fill', 'white')
+          .attr("stroke", "grey")
+          .attr("stroke-width", 1);
+
+
+        divLegend.selectAll("circle")
+            .data(d3.range(maxcluster+1))
+            .enter()
+            .append('circle')
+            .attr('cx', function(d) { return  d * 30+ 40; })
+            .attr('cy', function(d) { return 34; })
+            .attr('fill', function(d){return myColor(d)})
+            .attr('r', self.state.window_width * 0.002)
+        
+        divLegend.selectAll("text").data(d3.range(maxcluster+1))
+            .enter()
+            .append('text')
+            .attr('x', function(d) { return  d * 30 + 40; })
+            .style("text-anchor", "middle")
+            .attr('y', function(d) { return 50})
+            .text(function(d) { console.log(d.toString()); return d.toString(); })
+
+        divLegend.append("text")
+          .attr('dy', 20)
+          .attr('dx', 25)
+          .text("Node Color to Cluster Number")
+          .attr("text-anchor", "start")
+          .attr("font-family", "sans-serif")
+          .attr("font-size", "12px");
+
       });
     
   }
