@@ -46,6 +46,13 @@ export default function CustomizationPanel(props) {
             console.log(customFeatures)
         }
         // todo POST request
+        fetch('/time', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify([numArtworks, kValue, [...customFeatures]])
+        })
     }
 
     return (

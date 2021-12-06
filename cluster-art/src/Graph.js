@@ -65,15 +65,30 @@ class Graph extends React.Component {
 
   drawNodes() {
     var self = this;
+    var yScale = d3.scaleLinear().range([self.state.graph_height - 10, 10])
+
+    var xScale = d3.scaleLinear().range([10, self.state.graph_width - 10])
+
     var d = d3.csv(data, function(d) {
       return {
-        x: +d.x * self.state.graph_width,
-        y: +d.y * self.state.graph_height,
+        x: +d.x,
+        y: +d.y,
         text: d.text.toString(),
         cluster_id: +d.clusterid
       }
     }).then(dt => {
-      console.log(dt)
+      var xmax = d3.max(dt, function(d) {return d.x})
+      var xmin = d3.min(dt, function(d) {return d.x})
+
+      var ymax = d3.max(dt, function(d) {return d.y})
+      var ymin = d3.min(dt, function(d) {return d.y}) 
+
+      yScale.domain([ymin, ymax])
+      xScale.domain([xmin, xmax])
+
+      console.log(xmin)
+      console.log(xmax)
+
       var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2 - 250;
       var trans_height = (self.state.svg_height - self.state.graph_height - 30)/ - 200;
 
@@ -132,6 +147,39 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
+      var boxArtist = div2.append('text')
+        .attr('dy', 60)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxYear = div2.append('text')
+        .attr('dy', 85)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxOther = div2.append('text')
+        .attr('dy', 110)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
       //When you click on the x mark it should close out the click box
       var close = div2.append('path')
         .attr('d', d3.symbol().type(d3.symbolCross).size(60))
@@ -142,20 +190,18 @@ class Graph extends React.Component {
           div2.attr("opacity", "0")
         });
 
-      //Draw circles
       div.selectAll('circle')
           .data(dt)
           .enter()
           .append('circle')
           .attr('class',  function(d) { return d.text; })
-          .attr('cx', function(d) { return d.x; })
-          .attr('cy', function(d) { return d.y; })
+          .attr('cx', function(d) { return xScale(d.x); })
+          .attr('cy', function(d) { return yScale(d.y); })
           .attr('fill', function(d){return myColor(d.cluster_id)})
           .attr('r', 5)
           .on("mouseover", function(d){
-            //moving hover textbox
-            divHover.attr("transform", "translate(" + (this.__data__.x + 250 + 10) 
-              + "," + (this.__data__.y + 200 + 10) +")")
+            divHover.attr("transform", "translate(" + (xScale(this.__data__.x) + 250 + 10) 
+              + "," + (yScale(this.__data__.y) + 200 + 10) +")")
             .attr("opacity", 1);
 
             //Adding text
@@ -203,12 +249,28 @@ class Graph extends React.Component {
             .transition()
             .duration('10');
 
+            boxArtist.style("opacity", 1)
+            .text("Artist")
+            .transition()
+            .duration('10');
+
+            boxYear.style("opacity", 1)
+            .text("Year")
+            .transition()
+            .duration('10');
+
+            boxOther.style("opacity", 1)
+            .text("Other")
+            .transition()
+            .duration('10');
+
             //The box for clicking a node
             boxClick.style("opacity", 1)
             .attr("width", function(d) {return close_width + 25;})
-            .attr('height', 70)
+            .attr('height', 200)
             .transition()
             .duration('10');
+
 
             //Todo: add more information based on what's being passed in from backend
             //Appending artists name, maybe picture? general info about the art piece
