@@ -19,7 +19,7 @@ export default function CustomizationPanel(props) {
     const [collapsed, setCollapsed] = useState(false);
 
     const validateParams = () => {
-        if (numArtworks < 1 || numArtworks > 30000) {
+        if (numArtworks < 1 || numArtworks > 10000) {
             props.statusHandler(1);
             return false;
         }
@@ -76,7 +76,7 @@ export default function CustomizationPanel(props) {
                                             setNumArtworks(e.target.valueAsNumber)}
                                         defaultValue={numArtworks}
                                         min={100}
-                                        max={3000}
+                                        max={10000}
                                         step={100}
                                     />
                                     <Card.Subtitle>

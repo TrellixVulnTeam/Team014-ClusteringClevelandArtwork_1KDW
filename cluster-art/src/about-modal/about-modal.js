@@ -42,11 +42,11 @@ export default function AboutModal(props) {
 					</p>
 					<h4> How to use </h4>
 					 <ul>
-					  <li>Select number of wanted artworks (2-30000) (Note that if you select large values, 
+					  <li>Select number of wanted artworks (2-10000) (Note that if you select large values,
 					  	individual nodes might be hard to view)</li>
-					  <li>Select max number of wanted clusters (2-30) (Choose a cluster that makes sense for your 
+					  <li>Select max number of wanted clusters (2-25) (Choose a cluster that makes sense for your
 					  number of artworks!)</li>
-					  <li>Select what attributes you want to cluster (2 to 4)</li>
+					  <li>Select at least 2 clustering features</li>
 					  <li>Hover over a node to view the art piece's name</li>
 					  <li>Click a node to view more information about the art piece (click the x to close it)</li>
 					</ul> 
