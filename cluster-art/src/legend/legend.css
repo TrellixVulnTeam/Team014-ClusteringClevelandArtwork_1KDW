@@ -8,7 +8,9 @@
     padding: 8px;
     text-align: center;
     opacity: 0.25;
-    transition: 0.5s
+    transition: 0.5s;
+    min-width: 100px;
+    background-color: white;
 }
 
 #legend-container:hover {

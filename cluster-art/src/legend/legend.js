@@ -14,7 +14,7 @@ export default function Legend(props) {
                 {Array(props.clusters).fill(0).map((_, i) =>
                     <div className={"legend-point"} style={{backgroundColor: myColor(i)}}>
 
-                        {i}
+                        {i+1}
 
                     </div>
                 )}
