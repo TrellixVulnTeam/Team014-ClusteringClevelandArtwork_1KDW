@@ -20,7 +20,7 @@ export default function AttributeDropdown(props) {
     }
 
     return (
-        <Accordion>
+        <Accordion className={"accordion"} flush>
             <Accordion.Item eventKey={0}>
                 <Accordion.Header> Clustering Attributes </Accordion.Header>
                 <Accordion.Body>

@@ -10,64 +10,46 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      svg_width: 1600,
-      svg_height: 800,
-      graph_width: 1100,
-      graph_height: 700,
-      num_clusters: 3,
+      window_width: window.innerWidth,
+      window_height: window.innerHeight
     }
 
-    this.drawChart = this.drawChart.bind(this);
+    console.log(this.state.window_width)
+    console.log(this.state.window_height)
+
     this.drawNodes = this.drawNodes.bind(this);
   }
 
-  componentDidMount() {
-    this.drawChart();
-    this.drawNodes();
+  handleResize = () => {
+    //console.log(this.state.window_width)
+    //console.log(this.state.window_height)
+    this.setState({
+      window_width: window.innerWidth,
+      window_height: window.innerHeight
+    })
+    // this.drawChart();
+    // let curr_svg = document.getElementById("svg-component")
+    // curr_svg.height = this.state.window_height
+    // curr_svg.width = this.state.window_width
+        // .viewBox(`0 0 ${this.state.window_width} ${this.state.window_height}`)
+        // .attr("viewBox", `0 0 ${this.state.window_width} ${this.state.window_height}`)
   }
 
-  drawChart() {
-    //making svg responsive
-    d3.select(this.refs.overall).classed("svg-container", true)
-    .attr("transform", "translate(" + 200 + "," + 300 +")");
+  componentDidMount() {
+    // this.drawChart();
+    this.drawNodes();
+    window.addEventListener('resize', this.handleResize)
+  }
 
-    //drawing int svg
-    const svg = d3.select(this.refs.space)
-                .style('padding-left', '10px')
-                .style('padding-right', '10px')
-                //.style('background', 'pink')
-                .style('background', '#ebdfbc')
-                .style('cursor', 'pointer')
-                .style('-webkit-user-select', 'none')
-                .style('-khtml-user-select', 'none')
-                .style('-moz-user-select', 'none')
-                .style('-ms-user-select', 'none')
-                .style("margin", "auto")
-                .style("display", "block")
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "250 200 " + this.state.svg_width + " " + this.state.svg_height)
-                .classed("svg-content-responsive", true);
-
-    var trans_width = (this.state.svg_width - this.state.graph_width - 30)/2;
-    var trans_height = (this.state.svg_height - this.state.graph_height - 30)/2;
-
-    //this is the actual graph
-    const rect = svg.append("rect")
-                    .attr('width', this.state.graph_width + 30)
-                    .attr('height', this.state.graph_height + 30)
-                    .attr("fill", "#f7f2e1")
-                    .attr("stroke", "#d99e16")
-                    .attr("stroke-width", "10px")
-                    .attr("rx", 6)
-                    .attr("ry", 6)
-                    .attr("transform", "translate(" + 250 + "," + 200 +")");
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
   }
 
   drawNodes() {
     var self = this;
-    var yScale = d3.scaleLinear().range([self.state.graph_height - 10, 10])
+    var yScale = d3.scaleLinear().range([self.state.window_height - 10, 10])
 
-    var xScale = d3.scaleLinear().range([10, self.state.graph_width - 10])
+    var xScale = d3.scaleLinear().range([10, self.state.window_width - 10])
 
     var d = d3.csv(data, function(d) {
       return {
@@ -77,26 +59,53 @@ class Graph extends React.Component {
         cluster_id: +d.clusterid
       }
     }).then(dt => {
-      var xmax = d3.max(dt, function(d) {return d.x})
-      var xmin = d3.min(dt, function(d) {return d.x})
+      console.log(dt)
+      var xmax = d3.max(dt, function(d) {return d.x});
+      var xmin = d3.min(dt, function(d) {return d.x});
 
-      var ymax = d3.max(dt, function(d) {return d.y})
-      var ymin = d3.min(dt, function(d) {return d.y}) 
+      var ymax = d3.max(dt, function(d) {return d.y});
+      var ymin = d3.min(dt, function(d) {return d.y});
 
-      yScale.domain([ymin, ymax])
-      xScale.domain([xmin, xmax])
+      yScale.domain([ymin, ymax]);
+      xScale.domain([xmin, xmax]);
 
-      console.log(xmin)
-      console.log(xmax)
+      console.log(xmin);
+      console.log(xmax);
 
-      var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2 - 250;
-      var trans_height = (self.state.svg_height - self.state.graph_height - 30)/ - 200;
+      //drawing int svg
+      const svg = d3.select(this.refs.space)
+          .attr("id", "svg-component")
+          .style('cursor', 'pointer')
+          .style('-webkit-user-select', 'none')
+          .style('-khtml-user-select', 'none')
+          .style('-moz-user-select', 'none')
+          .style('-ms-user-select', 'none')
 
-      var myColor = d3.scaleSequential().domain([1, self.state.num_clusters]).range(d3.schemeSet1);
+          .attr("preserveAspectRatio", "xMinYMin meet")
+          .attr("viewBox", `0 0 ${this.state.window_width} ${this.state.window_height}`)
+
+          .classed("svg-content-responsive", true);
+
+      svg.call(d3.zoom()
+          .extent([[0,0], [this.state.window_width, this.state.window_height]])
+          .scaleExtent([1,8])
+          .on("zoom", zoomed))
+
+
+      ////////////////////////////////////////
+
+      var maxcluster = d3.max(dt, function(d) {return d.cluster_id})
+
+      var myColor = d3.scaleSequential().domain([1, maxcluster]).interpolator(d3.interpolateTurbo);
 
       //For circles
       var div = d3.select(this.refs.space).append('g')
-      .attr("transform", "translate(" + 250 + "," + 200 +")");
+
+      function zoomed({transform}) {
+        div.attr("transform", transform)
+        div2.attr("transform", transform)
+        divHover.attr("transform", transform)
+      }
 
       //Hover textbox. Append to here to add something into textbox
       var divHover = d3.select(this.refs.space).append('g');
@@ -104,8 +113,8 @@ class Graph extends React.Component {
       var textbox = divHover.append('rect')
         .attr('x', '0')
         .attr('y', '0')
-        .attr('width', 90)
-        .attr('height', 70)
+        .attr('width', 50)
+        .attr('height', 20)
         .attr('fill', 'white')
         .attr('stroke', 'white')
         .attr("rx", 6)
@@ -113,14 +122,11 @@ class Graph extends React.Component {
         .style("opacity", 0);
 
       var text = divHover.append('text')
-        .attr('dy', 35)
+        .attr('dy', 15)
         .attr('dx', 10)
-        .attr('padding', 10)
-        .attr("dominant-baseline", "middle")
         .attr("text-anchor", "start")
-        .attr("fill", "#73716b")
         .attr("font-family", "sans-serif")
-        .attr("font-size", "20px")
+        .attr("font-size", "12px")
         .style("opacity", 0);
 
       //Click textbox. Append here to add something into the clicked textbox
@@ -134,10 +140,45 @@ class Graph extends React.Component {
         .attr('width', 100)
         .attr('height', 100)
         .attr('fill', 'white')
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .attr("stroke", "grey")
+        .attr("stroke-width", 1);
 
       var boxText = div2.append('text')
         .attr('dy', 35)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        // .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxArtist = div2.append('text')
+        .attr('dy', 60)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxYear = div2.append('text')
+        .attr('dy', 85)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxOther = div2.append('text')
+        .attr('dy', 110)
         .attr('dx', 10)
         .attr('padding', 10)
         .attr("dominant-baseline", "middle")
@@ -156,19 +197,20 @@ class Graph extends React.Component {
         .on("click", function() {
           div2.attr("opacity", "0")
         });
-      
+
       div.selectAll('circle')
           .data(dt)
           .enter()
           .append('circle')
           .attr('class',  function(d) { return d.text; })
-          .attr('cx', function(d) { return xScale(d.x); })
+          .attr('cx', function(d) { return  xScale(d.x); })
           .attr('cy', function(d) { return yScale(d.y); })
           .attr('fill', function(d){return myColor(d.cluster_id)})
-          .attr('r', 5)
+          .attr('r', self.state.window_width * 0.002)
           .on("mouseover", function(d){
-            divHover.attr("transform", "translate(" + (xScale(this.__data__.x) + 250 + 10) 
-              + "," + (yScale(this.__data__.y) + 200 + 10) +")")
+            divHover
+            .attr("transform", "translate(" + (d.x + 10)
+              + "," + (d.y + 10) +")")
             .attr("opacity", 1);
 
             //Adding text
@@ -202,8 +244,8 @@ class Graph extends React.Component {
           })
           .on("click", function(d) {
             //Moving click textbox
-            div2.attr("transform", "translate(" + (250 + self.state.graph_width + 45) 
-              + "," + 210 +")")
+            div2.attr("transform", "translate(" + (d.x + 10)
+              + "," + (d.y + 10) +")")
             .attr("opacity", 1);
 
             //statis vs dynamic textbox width
@@ -216,12 +258,28 @@ class Graph extends React.Component {
             .transition()
             .duration('10');
 
+            boxArtist.style("opacity", 1)
+            .text("Artist")
+            .transition()
+            .duration('10');
+
+            boxYear.style("opacity", 1)
+            .text("Year")
+            .transition()
+            .duration('10');
+
+            boxOther.style("opacity", 1)
+            .text("Other")
+            .transition()
+            .duration('10');
+
             //The box for clicking a node
             boxClick.style("opacity", 1)
             .attr("width", function(d) {return close_width + 25;})
-            .attr('height', 70)
+            .attr('height', 200)
             .transition()
             .duration('10');
+
 
             //Todo: add more information based on what's being passed in from backend
             //Appending artists name, maybe picture? general info about the art piece
@@ -234,11 +292,10 @@ class Graph extends React.Component {
   }
 
   render() {
-
+    // debugger
     return (
-      <div ref='overall'>
-        <svg ref='space'>
-        </svg>
+      <div ref='overall' style={{overflow: "hidden"}}>
+        <svg ref='space' />
       </div>
     );
   }
