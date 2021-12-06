@@ -58,7 +58,8 @@ class Graph extends React.Component {
 
     var xScale = d3.scaleLinear().range([10, self.state.window_width - 10])
 
-    var d = d3.csv(data, function(d) {
+    console.log(jsonData)
+    d3.csv(data, function(d) {
       return {
         x: +d.x,
         y: +d.y,
@@ -73,7 +74,6 @@ class Graph extends React.Component {
         //technique: d.technique.toString(),
       }
     }).then(dt => {
-      console.log(dt)
       var xmax = d3.max(dt, function(d) {return d.x});
       var xmin = d3.min(dt, function(d) {return d.x});
 
@@ -167,7 +167,7 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
-      var boxArtist = div2.append('text')
+      var boxTimePeriod = div2.append('text')
         .attr('dy', 60)
         .attr('dx', 10)
         .attr('padding', 10)
@@ -178,7 +178,7 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
-      var boxYear = div2.append('text')
+      var boxCulture = div2.append('text')
         .attr('dy', 85)
         .attr('dx', 10)
         .attr('padding', 10)
@@ -189,8 +189,19 @@ class Graph extends React.Component {
         .attr("font-size", "20px")
         .style("opacity", 0);
 
-      var boxOther = div2.append('text')
+      var boxTypeTechnique = div2.append('text')
         .attr('dy', 110)
+        .attr('dx', 10)
+        .attr('padding', 10)
+        .attr("dominant-baseline", "middle")
+        .attr("text-anchor", "start")
+        .attr("fill", "#73716b")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", "20px")
+        .style("opacity", 0);
+
+      var boxFunFact = div2.append('text')
+        .attr('dy', 135)
         .attr('dx', 10)
         .attr('padding', 10)
         .attr("dominant-baseline", "middle")
@@ -264,34 +275,42 @@ class Graph extends React.Component {
             .attr("opacity", 1);
 
             //statis vs dynamic textbox width
-            var close_width = 400;
-            var text_width = text.node().getBBox().width + 20;
+
 
             //make everything have an opacity of 1
             boxText.style("opacity", 1)
-            .text(d['target'].__data__.text)
+            .text(jsonData[d['target'].__data__.text]["title"])
             .transition()
             .duration('10');
 
-            boxArtist.style("opacity", 1)
-            .text("Artist")
+            boxTimePeriod.style("opacity", 1)
+            .text(jsonData[d['target'].__data__.text]["creation_date_earliest"] + "~" + jsonData[d['target'].__data__.text]["creation_date_latest"])
             .transition()
             .duration('10');
 
-            boxYear.style("opacity", 1)
-            .text("Year")
+            boxCulture.style("opacity", 1)
+            .text(jsonData[d['target'].__data__.text]["culture"])
             .transition()
             .duration('10');
 
-            boxOther.style("opacity", 1)
-            .text("Other")
+            boxTypeTechnique.style("opacity", 1)
+            .text(jsonData[d['target'].__data__.text]["type"]+", " +jsonData[d['target'].__data__.text]["Technique"])
             .transition()
             .duration('10');
 
+            boxFunFact.style("opacity", 1)
+            .text(jsonData[d['target'].__data__.text]["fun_fact"])
+            .transition()
+            .duration('10');
+
+            var text_width = d3.max([boxText.node().getBBox().width, boxTimePeriod.node().getBBox().width
+              , boxCulture.node().getBBox().width, boxTypeTechnique.node().getBBox().width, boxFunFact.node().getBBox().width]) + 20;
+
+            console.log(text_width)
             //The box for clicking a node
             boxClick.style("opacity", 1)
-            .attr("width", function(d) {return close_width + 25;})
-            .attr('height', 200)
+            .attr("width", function(d) {return text_width + 25;})
+            .attr('height', 130)
             .transition()
             .duration('10');
 
@@ -299,7 +318,7 @@ class Graph extends React.Component {
             //Todo: add more information based on what's being passed in from backend
             //Appending artists name, maybe picture? general info about the art piece
 
-            close.attr("transform", "translate(" + (close_width + 15) + ", 10) rotate(45)")
+            close.attr("transform", "translate(" + (text_width + 15) + ", 10) rotate(45)")
             .style("opacity", 1);
           })
         // var divLegend = d3.select(this.refs.space).append("g");

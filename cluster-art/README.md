@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## How to set up
+This project is comprised of a React.js frontend and a Flask backend. 
+
+###Set up the backend
+1. Go into cluster-art/api/venv/Script and run activate
+2. pip install python-dotenv
+3. pip install Flask-Cors
+
+###Set up the frontend
+1. If you're setting up the project for the first time run npm install in cluster-art
+2. npm start
+
 ## Available Scripts
 
 In the project directory, you can run:
