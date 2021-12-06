@@ -63,7 +63,14 @@ class Graph extends React.Component {
         x: +d.x,
         y: +d.y,
         text: d.text.toString(),
-        cluster_id: +d.clusterid
+        cluster_id: +d.clusterid,
+        //creation_date_beg: d.creation_date_beg.toString(),
+        //creation_date_end: d.creation_date_end.toString(),
+        //image_url: d.image_url.toString(),
+        //artist_name: d.artist_name.toString(),
+        //culture: d.culture.toString(),
+        //type: d.type.toString(),
+        //technique: d.technique.toString(),
       }
     }).then(dt => {
       console.log(dt)
@@ -87,7 +94,6 @@ class Graph extends React.Component {
           .style('-khtml-user-select', 'none')
           .style('-moz-user-select', 'none')
           .style('-ms-user-select', 'none')
-
           .attr("preserveAspectRatio", "xMinYMin meet")
           .attr("viewBox", `0 0 ${this.state.window_width} ${this.state.window_height}`)
 
@@ -110,7 +116,6 @@ class Graph extends React.Component {
 
       function zoomed({transform}) {
         div.attr("transform", transform)
-        div2.attr("transform", transform)
         divHover.attr("transform", transform)
       }
 
@@ -202,7 +207,9 @@ class Graph extends React.Component {
         .attr('fill', 'gray')
         .style("opacity", 0)
         .on("click", function() {
-          div2.attr("opacity", "0")
+          div2.attr("opacity", "0");
+          div2.selectAll("text").text("");
+          boxClick.attr("width", 0).attr("height", 0);
         });
 
       div.selectAll('circle')
@@ -227,12 +234,13 @@ class Graph extends React.Component {
             .duration('10');
 
             //Dynamic text width
-            var text_width = text.node().getBBox().width + 20;
+            var text_width = text.node().getBBox().width + 15;
+            var text_height = text.node().getBBox().height + 10;
 
             //Hover textbox formatting
             textbox.style("opacity", 1)
             .attr("width", function(d) {return text_width;})
-            .attr('height', 70)
+            .attr('height', text_height)
             .transition()
             .duration('10');
           })
@@ -251,8 +259,8 @@ class Graph extends React.Component {
           })
           .on("click", function(d) {
             //Moving click textbox
-            div2.attr("transform", "translate(" + (d.x + 10)
-              + "," + (d.y + 10) +")")
+            div2.attr("transform", "translate(" + (d.x + 5)
+              + "," + (d.y + 5) +")")
             .attr("opacity", 1);
 
             //statis vs dynamic textbox width
