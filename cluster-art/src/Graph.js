@@ -92,7 +92,9 @@ class Graph extends React.Component {
       var trans_width = (self.state.svg_width - self.state.graph_width - 30)/2 - 250;
       var trans_height = (self.state.svg_height - self.state.graph_height - 30)/ - 200;
 
-      var myColor = d3.scaleSequential().domain([1, self.state.num_clusters]).range(d3.schemeSet1);
+      var maxcluster = d3.max(dt, function(d) {return d.cluster_id})
+
+      var myColor = d3.scaleSequential().domain([1, maxcluster]).interpolator(d3.interpolateTurbo);
 
       //For circles
       var div = d3.select(this.refs.space).append('g')
