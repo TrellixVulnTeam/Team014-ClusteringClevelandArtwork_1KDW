@@ -11,11 +11,12 @@ class Graph extends React.Component {
     super(props);
     this.state = {
       window_width: window.innerWidth,
-      window_height: window.innerHeight
+      window_height: window.innerHeight,
+      jsonData: this.props.jsonData
     }
 
-    console.log(this.state.window_width)
-    console.log(this.state.window_height)
+    // console.log(this.state.window_width)
+    // console.log(this.state.window_height)
 
     this.drawNodes = this.drawNodes.bind(this);
   }
@@ -35,9 +36,15 @@ class Graph extends React.Component {
         // .attr("viewBox", `0 0 ${this.state.window_width} ${this.state.window_height}`)
   }
 
+  isEmpty = (json) => {
+    return Object.keys(json).length === 0;
+  }
+
   componentDidMount() {
     // this.drawChart();
-    this.drawNodes();
+    if (!this.isEmpty(this.state.jsonData)) {
+      this.drawNodes(this.state.jsonData);
+    }
     window.addEventListener('resize', this.handleResize)
   }
 
@@ -45,7 +52,7 @@ class Graph extends React.Component {
     window.removeEventListener('resize', this.handleResize)
   }
 
-  drawNodes() {
+  drawNodes(jsonData) {
     var self = this;
     var yScale = d3.scaleLinear().range([self.state.window_height - 10, 10])
 
@@ -215,7 +222,7 @@ class Graph extends React.Component {
 
             //Adding text
             text.style("opacity", 1)
-            .text(d['target'].__data__.text)
+            .text(jsonData[d['target'].__data__.text]["title"])
             .transition()
             .duration('10');
 

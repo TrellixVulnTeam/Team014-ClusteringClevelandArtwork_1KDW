@@ -4,7 +4,7 @@ import './kmeans.css';
 import {Modal} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 
-export default function KMeans() {
+export default function KMeans(props) {
 
     const [status, setStatus] = useState(0);
     const errorMessages = [
@@ -19,6 +19,7 @@ export default function KMeans() {
             <CustomizationPanel
                 id={"panel-wrapper"}
                 statusHandler={setStatus}
+                jsonHandler={props.jsonHandler}
             />
 
             <Modal show={status !== 0} onHide={() => setStatus(0)}>

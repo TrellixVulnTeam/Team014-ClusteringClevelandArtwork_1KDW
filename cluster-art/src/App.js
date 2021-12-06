@@ -14,8 +14,27 @@ class App extends React.Component {
     super(props);
 	this.state = {
 		aboutOpened: true,
-		creditsOpened: false
+		creditsOpened: false,
+		currentJson: {}
 	}
+  }
+
+  componentDidMount() {
+	  fetch('/time', {
+		  method: 'POST',
+		  headers: {
+			  'Content-Type': 'application/json'
+		  },
+		  body: JSON.stringify([100, 5,
+			  ["Title", "Creation Date", "Culture", "Collection", "Type", "Technique"]])
+	  })
+		  .then(res => res.json())
+		  .then(data => this.setState({currentJson: data}))
+  }
+
+	handleJson = (newJson) => {
+	  this.setState({currentJson: newJson})
+	  console.log(this.state.currentJson)
   }
 
 	render() {
@@ -48,8 +67,8 @@ class App extends React.Component {
 
 			<CreditsModal show={this.state.creditsOpened} onHide={() => this.setState({creditsOpened: false})} />
 			<AboutModal show={this.state.aboutOpened} onHide={() => this.setState({aboutOpened: false})} />
-	    	<KMeans />
-	    	<Graph style={{overflow: "hidden"}}/>
+	    	<KMeans jsonHandler={this.handleJson}/>
+	    	<Graph style={{overflow: "hidden"}} jsonData={this.state.currentJson}/>
     	</div>
     );
   }
