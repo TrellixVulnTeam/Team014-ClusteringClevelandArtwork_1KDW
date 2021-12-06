@@ -3,7 +3,7 @@ import './legend.css'
 import * as d3 from "d3";
 
 export default function Legend(props) {
-    var myColor = d3.scaleSequential().domain([0, props.clusters]).interpolator(d3.interpolateTurbo);
+    var myColor = d3.scaleSequential().domain([0, props.clusters-1]).interpolator(d3.interpolateTurbo);
 
     return (
         <div id={"legend-container"} style={{width: props.clusters * 30}}>
