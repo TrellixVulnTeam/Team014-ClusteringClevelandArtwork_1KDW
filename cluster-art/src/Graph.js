@@ -107,9 +107,6 @@ class Graph extends React.Component {
 
       //For circles
       var div = d3.select(this.refs.space).append('g')
-          // .attr("cursor", "grab")
-
-      // .attr("transform", "translate(" + 250 + "," + 200 +")");
 
       function zoomed({transform}) {
         div.attr("transform", transform)
