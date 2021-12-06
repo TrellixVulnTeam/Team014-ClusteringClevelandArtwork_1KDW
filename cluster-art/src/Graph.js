@@ -56,7 +56,14 @@ class Graph extends React.Component {
         x: +d.x,
         y: +d.y,
         text: d.text.toString(),
-        cluster_id: +d.clusterid
+        cluster_id: +d.clusterid,
+        //creation_date_beg: d.creation_date_beg.toString(),
+        //creation_date_end: d.creation_date_end.toString(),
+        //image_url: d.image_url.toString(),
+        //artist_name: d.artist_name.toString(),
+        //culture: d.culture.toString(),
+        //type: d.type.toString(),
+        //technique: d.technique.toString(),
       }
     }).then(dt => {
       console.log(dt)
