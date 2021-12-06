@@ -310,7 +310,7 @@ class Graph extends React.Component {
             //The box for clicking a node
             boxClick.style("opacity", 1)
             .attr("width", function(d) {return text_width + 25;})
-            .attr('height', 200)
+            .attr('height', 130)
             .transition()
             .duration('10');
 
