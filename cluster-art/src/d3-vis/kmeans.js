@@ -20,6 +20,7 @@ export default function KMeans(props) {
                 id={"panel-wrapper"}
                 statusHandler={setStatus}
                 jsonHandler={props.jsonHandler}
+                clusterHandler={props.clusterHandler}
             />
 
             <Modal show={status !== 0} onHide={() => setStatus(0)}>
