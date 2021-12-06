@@ -7,6 +7,7 @@ import AboutModal from "./about-modal/about-modal";
 import CreditsModal from "./credits-modal/credits-modal";
 import buzz from './about-modal/assets/buzz.png'
 import cma from './about-modal/assets/cma.png'
+import Legend from "./legend/legend";
 
 
 class App extends React.Component {
@@ -15,7 +16,8 @@ class App extends React.Component {
 	this.state = {
 		aboutOpened: true,
 		creditsOpened: false,
-		currentJson: {}
+		currentJson: {},
+		numClusters: 5
 	}
   }
 
@@ -34,8 +36,11 @@ class App extends React.Component {
 
 	handleJson = (newJson) => {
 	  this.setState({currentJson: newJson})
-	  console.log(this.state.currentJson)
-  }
+  	}
+
+  	handleClusters = (newK) => {
+	  this.setState({numClusters: newK})
+	}
 
 	render() {
     return (
@@ -67,8 +72,9 @@ class App extends React.Component {
 
 			<CreditsModal show={this.state.creditsOpened} onHide={() => this.setState({creditsOpened: false})} />
 			<AboutModal show={this.state.aboutOpened} onHide={() => this.setState({aboutOpened: false})} />
-	    	<KMeans jsonHandler={this.handleJson}/>
+	    	<KMeans jsonHandler={this.handleJson} clusterHandler={this.handleClusters}/>
 	    	<Graph style={{overflow: "hidden"}} jsonData={this.state.currentJson}/>
+			<Legend clusters={this.state.numClusters}/>
     	</div>
     );
   }
