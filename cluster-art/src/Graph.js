@@ -10,11 +10,6 @@ class Graph extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // svg_width: window.innerWidth,
-      // svg_height: window.innerHeight,
-      // graph_width: window.innerWidth,
-      // graph_height: window.innerHeight,
-      num_clusters: 3,
       window_width: window.innerWidth,
       window_height: window.innerHeight
     }
@@ -22,7 +17,6 @@ class Graph extends React.Component {
     console.log(this.state.window_width)
     console.log(this.state.window_height)
 
-    // this.drawChart = this.drawChart.bind(this);
     this.drawNodes = this.drawNodes.bind(this);
   }
 
@@ -34,7 +28,6 @@ class Graph extends React.Component {
       window_height: window.innerHeight
     })
     // this.drawChart();
-    this.drawNodes();
     // let curr_svg = document.getElementById("svg-component")
     // curr_svg.height = this.state.window_height
     // curr_svg.width = this.state.window_width
@@ -110,6 +103,8 @@ class Graph extends React.Component {
 
       function zoomed({transform}) {
         div.attr("transform", transform)
+        div2.attr("transform", transform)
+        divHover.attr("transform", transform)
       }
 
       //Hover textbox. Append to here to add something into textbox
@@ -213,8 +208,9 @@ class Graph extends React.Component {
           .attr('fill', function(d){return myColor(d.cluster_id)})
           .attr('r', self.state.window_width * 0.002)
           .on("mouseover", function(d){
-            divHover.attr("transform", "translate(" + (xScale(this.__data__.x)) 
-              + "," + (yScale(this.__data__.y)) +")")
+            divHover
+            .attr("transform", "translate(" + (d.x + 10)
+              + "," + (d.y + 10) +")")
             .attr("opacity", 1);
 
             //Adding text
@@ -248,10 +244,8 @@ class Graph extends React.Component {
           })
           .on("click", function(d) {
             //Moving click textbox
-            //div2.attr("transform", "translate(" + (xScale(this.__data__.x)) 
-            //  + "," + (yScale(this.__data__.y)) +")")
-            div2.attr("transform", "translate(" + (xScale(this.__data__.x)) 
-              + "," + (yScale(this.__data__.y)) +")")
+            div2.attr("transform", "translate(" + (d.x + 10)
+              + "," + (d.y + 10) +")")
             .attr("opacity", 1);
 
             //statis vs dynamic textbox width
